@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
-// Import the connection object
+// Import the database connection object
 var connection = require("../dbConnect");
 
 function getCatsInfo(callback) {
