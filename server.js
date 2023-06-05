@@ -4,6 +4,7 @@ const cors = require("cors");
 let catInfo = require("./routes/catInfo"); // API for displaying all cats in simplied info.
 let catDetailsById = require("./routes/catDetailsById"); //API for Display details of the cat
 let cwLogin = require("./routes/cwLogin"); //Login API for Charity Worker
+let cwRegister = require("./routes/cwRegister"); //Sign Up API for Charity Worker
 let pubLogin = require("./routes/pubLogin"); //Login API for Charity Worker
 
 // Create the server
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 app.use("/v1/cat", catInfo);
 app.use("/v1/cat", catDetailsById);
 app.use("/v1/cwLogin", cwLogin);
+app.use("/v1/cwRegister", cwRegister);
 app.use("/v1/pubLogin", pubLogin);
 
 // Export the server
