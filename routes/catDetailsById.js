@@ -9,7 +9,7 @@ var connection = require("../dbConnect");
 
 function getCatById(catID, callback) {
   connection.query(
-    "SELECT catID, name, gender, age, color, breed, description, createDateTime, cwEmail FROM Cats WHERE catID = ?",
+    "SELECT catID, name, gender, age, color, breed, description, createDateTime, catImgPath, cwEmail FROM Cats WHERE catID = ?",
     [catID],
     function (error, results, fields) {
       if (error) {
