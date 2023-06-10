@@ -8,11 +8,12 @@ let cwRegister = require("./routes/cwRegister"); //Sign Up API for Charity Worke
 let pubLogin = require("./routes/pubLogin"); //Login API for Charity Worker
 let createCatDetails = require('./routes/createCatDetails'); // API for Charity Worker create cat details
 let updateCatDetails = require('./routes/updateCatDetails'); // API for Charity Worker update cat details
+let delCatDetails = require('./routes/delCatDetails'); // API for Charity Worker remove cat details
 
 // Create the server
 const app = express();
 
-// Use CORS middleware
+// Use CORS
 app.use(cors());
 
 // Parse incoming requests with JSON payloads
@@ -37,6 +38,7 @@ app.use("/v1/cwRegister", cwRegister);
 app.use("/v1/pubLogin", pubLogin);
 app.use("/v1/createCatDetails", createCatDetails);
 app.use("/v1/updateCatDetails", updateCatDetails);
+app.use("/v1/delCatDetails", delCatDetails);
 app.use('/catImage', express.static('catImage'));
 
 // Export the server
