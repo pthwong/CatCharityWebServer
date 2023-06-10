@@ -7,6 +7,7 @@ let cwLogin = require("./routes/cwLogin"); //Login API for Charity Worker
 let cwRegister = require("./routes/cwRegister"); //Sign Up API for Charity Worker
 let pubLogin = require("./routes/pubLogin"); //Login API for Charity Worker
 let createCatDetails = require('./routes/createCatDetails'); // API for Charity Worker create cat details
+let updateCatDetails = require('./routes/updateCatDetails'); // API for Charity Worker update cat details
 
 // Create the server
 const app = express();
@@ -28,13 +29,14 @@ app.get("/", (req, res) => {
   res.send("Hello from the server!");
 });
 
-// RESTful API
+// Calling RESTful API
 app.use("/v1/cat", catInfo);
 app.use("/v1/cat", catDetailsById);
 app.use("/v1/cwLogin", cwLogin);
 app.use("/v1/cwRegister", cwRegister);
 app.use("/v1/pubLogin", pubLogin);
 app.use("/v1/createCatDetails", createCatDetails);
+app.use("/v1/updateCatDetails", updateCatDetails);
 app.use('/catImage', express.static('catImage'));
 
 // Export the server
