@@ -6,7 +6,7 @@ var connection = require("../dbConnect");
 
 function getCatsInfo(callback) {
   connection.query(
-    "SELECT catID, name, gender, age, color, updateDateTime, cwEmail, catImgPath FROM Cats",
+    "SELECT catID, name, gender, age, color, breed, updateDateTime, cwEmail, catImgPath FROM Cats",
     function (error, results, fields) {
       if (error) {
         callback({ status: 500, error: error, response: null });
