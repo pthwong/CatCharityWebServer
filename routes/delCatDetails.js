@@ -4,11 +4,11 @@ var router = express.Router();
 var express = require("express");
 var router = express.Router();
 
-// Import the connection object
-var connection = require("../dbConnect");
+// Import the db object
+var db = require("../dbConnect");
 
 function deleteCatDetails(catID, callback) {
-  connection.query(
+  db.query(
     "DELETE FROM Cats WHERE catID = ?",
     [catID],
     function (error, results, fields) {

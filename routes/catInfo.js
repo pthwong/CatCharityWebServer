@@ -1,11 +1,11 @@
 var express = require("express");
 var router = express.Router();
 
-// Import the database connection object
-var connection = require("../dbConnect");
+// Import the database db object
+var db = require("../dbConnect");
 
 function getCatsInfo(callback) {
-  connection.query(
+  db.query(
     "SELECT catID, name, gender, age, color, breed, updateDateTime, cwEmail, catImgPath FROM Cats",
     function (error, results, fields) {
       if (error) {
