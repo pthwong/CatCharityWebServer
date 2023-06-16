@@ -18,7 +18,7 @@ router.post("/", (req, res) => {
     const { cwEmail, cwPassword } = req.body;
   
     if (!cwEmail || !cwPassword) {
-      return res.status(400).send('Missing username or password');
+      return res.status(400).send('Missing email or password');
     }
   
     const hashedCwPassword = crypto.createHash('sha1').update(cwPassword).digest('hex');
@@ -32,7 +32,7 @@ router.post("/", (req, res) => {
         const token = jwt.sign({ cwEmail: charityWorker.cwEmail }, SECRET_KEY); // replace with your secret key
         res.json({ token });
       } else {
-        res.status(401).json({error: 'Invalid username or password'});
+        res.status(401).json({error: 'Invalid email or password'});
       }
     });
   });
