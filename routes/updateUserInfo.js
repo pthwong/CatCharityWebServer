@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var crypto = require("crypto");
-var db = require("../dbConnect"); // Assume you have a db module for database connection
+var db = require("../dbConnect");
 
 router.put("/", (req, res) => {
   const { name, email, oldPassword, newPassword, retypeNewPassword, role } =

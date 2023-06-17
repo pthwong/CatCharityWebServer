@@ -23,11 +23,13 @@ app.use(cors());
 // Parse incoming requests with JSON payloads
 app.use(express.json());
 
-const port = 7600; // Use the PORT environment variable, or 5000 if the variable isn't set
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+if (require.main === module) {
+  // This file was run directly, and not required as a module in another file.
+  const port = 7600;
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
 
 // Create routes
 app.get("/", (req, res) => {
