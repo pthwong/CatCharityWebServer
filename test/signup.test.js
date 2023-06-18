@@ -11,7 +11,7 @@ describe("Testing API for signing up the charity worker account", () => {
 
     // Sending a POST request with email in the request body
     const res = await request(app)
-      .post("/v1/cwRegister")
+      .post("/cwRegister")
       .send({ cwName: name, cwEmail: email, cwPassword: password, signUpCode });
 
     console.log(res.body);
@@ -33,27 +33,61 @@ describe("Testing API for signing up the charity worker account", () => {
 
     // Sending a POST request with email in the request body
     const res = await request(app)
-      .post("/v1/cwRegister")
+      .post("/cwRegister")
       .send({ cwName: name, cwEmail: email, cwPassword: password, signUpCode });
 
     console.log(res.body);
 
     // Assertions
-    expect(res.statusCode).toEqual(400); // Check if the status code is 200
+    expect(res.statusCode).toEqual(400); // Check if the status code is 400
     expect(res.body).toHaveProperty("error", "Invalid sign up code"); // Check if the registration was unsuccessful with error message.
+  });
+  it("Signup Charity Worker with duplicated user account & correct sign up code", async () => {
+    const name = "Lesile Cheung";
+    const email = "lesile212@gmail.com"; // Use a valid email that exists in your database
+    const password = "38432&29#323";
+    const signUpCode = "698475";
+
+    // Sending a POST request with email in the request body
+    const res = await request(app)
+      .post("/cwRegister")
+      .send({ cwName: name, cwEmail: email, cwPassword: password, signUpCode });
+
+    console.log(res.body);
+
+    // Assertions
+    expect(res.statusCode).toEqual(409); // Check if the status code is 409
+    expect(res.body).toHaveProperty("error"); // Check if the registration was contained error
+  });
+  it("Signup Charity Worker with other error & correct sign up code", async () => {
+    const name = "Lesile Cheung";
+    const email = "lesile212@gmail.com"; // Use a valid email that exists in your database
+    const password = "38432&29#323";
+    const signUpCode = "698475";
+
+    // Sending a POST request with email in the request body
+    const res = await request(app)
+      .post("/cwRegister")
+      .send({ cwName: name, cwEmail: email, cwPassword: password, signUpCode });
+
+    console.log(res.body);
+
+    // Assertions
+    expect(res.statusCode).toEqual(500); // Check if the status code is 500
+    expect(res.body).toHaveProperty("error"); // Check if the registration was contained error
   });
 });
 
 describe("Testing API for signing up the public account", () => {
   // Testing the endpoint to fetch user info by email
-  it("Signup Charity Worker Account with Checking Correct Signup Code", async () => {
+  it("Signup Public Account successfully", async () => {
     const name = "Ian Chan";
     const email = "ianchan@gmail.com"; // Use a valid email that exists in your database
     const password = "48#efkifewfgjf@";
 
     // Sending a POST request with email in the request body
     const res = await request(app)
-      .post("/v1/pubRegister")
+      .post("/pubRegister")
       .send({ pubName: name, pubEmail: email, pubPassword: password });
 
     console.log(res.body);
@@ -64,5 +98,37 @@ describe("Testing API for signing up the public account", () => {
       "message",
       "Signing up Public account successful"
     ); // Check if the registration was successful
+  });
+  it("Signup Public Account that already in use", async () => {
+    const name = "Ian Chan";
+    const email = "ianchan@gmail.com";
+    const password = "48#efkifewfgjf@";
+
+    // Sending a POST request with email in the request body
+    const res = await request(app)
+      .post("/pubRegister")
+      .send({ pubName: name, pubEmail: email, pubPassword: password });
+
+    console.log(res.body);
+
+    // Assertions
+    expect(res.statusCode).toEqual(409); // Check if the status code is 409
+    expect(res.body).toHaveProperty("error"); // Check if the registration was contained error
+  });
+  it("Signup Public Account with other error", async () => {
+    const name = "Ian Chan";
+    const email = "ianchan@gmail.com";
+    const password = "48#efkifewfgjf@";
+
+    // Sending a POST request with email in the request body
+    const res = await request(app)
+      .post("/pubRegister")
+      .send({ pubName: name, pubEmail: email, pubPassword: password });
+
+    console.log(res.body);
+
+    // Assertions
+    expect(res.statusCode).toEqual(500); // Check if the status code is 500
+    expect(res.body).toHaveProperty("error"); // Check if the registration was contained error
   });
 });

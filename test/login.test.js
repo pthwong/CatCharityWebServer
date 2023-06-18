@@ -8,7 +8,7 @@ describe("Testing API for signing in the charity worker account", () => {
 
     // Sending a POST request with email in the request body
     const res = await request(app)
-      .post("/v1/cwLogin")
+      .post("/cwLogin")
       .send({ cwEmail: email, cwPassword: password });
 
     console.log(res.body);
@@ -23,7 +23,7 @@ describe("Testing API for signing in the charity worker account", () => {
 
     // Sending a POST request with email in the request body
     const res = await request(app)
-      .post("/v1/cwLogin")
+      .post("/cwLogin")
       .send({ cwEmail: email, cwPassword: password });
 
     console.log(res.body);
@@ -41,7 +41,7 @@ describe("Testing API for signing in the public account", () => {
 
     // Sending a POST request with email in the request body
     const res = await request(app)
-      .post("/v1/pubLogin")
+      .post("/pubLogin")
       .send({ pubEmail: email, pubPassword: password });
 
     console.log(res.body);
@@ -56,7 +56,7 @@ describe("Testing API for signing in the public account", () => {
 
     // Sending a POST request with email in the request body
     const res = await request(app)
-      .post("/v1/pubLogin")
+      .post("/pubLogin")
       .send({ pubEmail: email, pubPassword: password });
 
     console.log(res.body);
