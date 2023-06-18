@@ -27,8 +27,13 @@ function getCatDetailsById(catID, callback) {
 
 router.get("/:catID", function (req, res, next) {
   const catID = req.params.catID;
-  getCatDetailsById(catID, function (response) {
-    res.send(response);
+  getCatDetailsById(catID, function (result) {
+    console.log(result.status);
+    if (result.status === 200) {
+      res.status(result.status).send(result.response); // Use result.response
+    } else {
+      res.status(result.status).send({ error: result.error }); // Send error message in an object
+    }
   });
 });
 
