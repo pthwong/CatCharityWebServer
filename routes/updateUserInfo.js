@@ -29,91 +29,103 @@ router.put("/", (req, res) => {
       return res.status(400).json({ error: "Invalid role" });
   }
 
-  //Update password
-  if (
-    oldPassword ||
-    newPassword ||
-    retypeNewPassword ||
-    oldPassword ||
-    newPassword ||
-    retypeNewPassword
-  ) {
-    // Validate input
-    if (!email || !role) {
-      return res
-        .status(400)
-        .json({ error: "Please provide all required fields" });
-    }
+  const sql = `SELECT * FROM ${tableName} WHERE ${emailRole} = ?`;
 
-    if (newPassword !== retypeNewPassword) {
-      return res
-        .status(400)
-        .json({ error: "New password and retype password do not match" });
-    }
+  db.query(sql, [email], (err, result) => {
+    if (result.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    } else {
+      //Update password
+      if (
+        oldPassword ||
+        newPassword ||
+        retypeNewPassword ||
+        oldPassword ||
+        newPassword ||
+        retypeNewPassword
+      ) {
+        // Validate input
+        if (!email || !role) {
+          return res
+            .status(400)
+            .json({ error: "Please provide all required fields" });
+        }
 
-    // Check if old password is correct
-    const hashedOldPassword = crypto
-      .createHash("sha1")
-      .update(oldPassword)
-      .digest("hex");
-    const sql = `SELECT * FROM ${tableName} WHERE ${emailRole} = ? AND ${passwordColumnName} = ?`;
+        if (newPassword !== retypeNewPassword) {
+          return res
+            .status(401)
+            .json({ error: "New password and retype password do not match" });
+        }
 
-    db.query(sql, [email, hashedOldPassword], (err, result) => {
-      if (err) return res.status(500).json({ error: "Database error" });
+        // Check if old password is correct
+        const hashedOldPassword = crypto
+          .createHash("sha1")
+          .update(oldPassword)
+          .digest("hex");
+        const sql = `SELECT * FROM ${tableName} WHERE ${emailRole} = ? AND ${passwordColumnName} = ?`;
 
-      if (result.length === 0) {
-        return res.status(401).json({ error: "Old password is incorrect" });
-      }
+        db.query(sql, [email, hashedOldPassword], (err, result) => {
+          if (err) return res.status(500).json({ error: "Server error" });
 
-      // Update password in database
-      const hashedNewPassword = crypto
-        .createHash("sha1")
-        .update(newPassword)
-        .digest("hex");
-
-      //If not update name
-      if (!name) {
-        updateSql = `UPDATE ${tableName} SET ${passwordColumnName} = ? WHERE ${emailRole} = ?`;
-
-        db.query(updateSql, [hashedNewPassword, email], (err, updateResult) => {
-          if (err) return res.status(500).json({ error: "Database error" });
-
-          res.json({ message: "User Info updated successfully" });
-        });
-      } else {
-        //If update name also
-        updateSql = `UPDATE ${tableName} SET ${nameRole} = ?, ${passwordColumnName} = ? WHERE ${emailRole} = ?`;
-
-        db.query(
-          updateSql,
-          [name, hashedNewPassword, email],
-          (err, updateResult) => {
-            if (err) return res.status(500).json({ error: "Database error" });
-
-            res.json({ message: "User Info updated successfully" });
+          if (result.length === 0) {
+            return res.status(401).json({ error: "Old password is incorrect" });
           }
-        );
+
+          // Update password in database
+          const hashedNewPassword = crypto
+            .createHash("sha1")
+            .update(newPassword)
+            .digest("hex");
+
+          //If not update name
+          if (!name) {
+            updateSql = `UPDATE ${tableName} SET ${passwordColumnName} = ? WHERE ${emailRole} = ?`;
+
+            db.query(
+              updateSql,
+              [hashedNewPassword, email],
+              (err, updateResult) => {
+                if (err) return res.status(500).json({ error: "Server error" });
+
+                res.json({ message: "User Info updated successfully" });
+              }
+            );
+          } else {
+            //If update name also
+            updateSql = `UPDATE ${tableName} SET ${nameRole} = ?, ${passwordColumnName} = ? WHERE ${emailRole} = ?`;
+
+            db.query(
+              updateSql,
+              [name, hashedNewPassword, email],
+              (err, updateResult) => {
+                if (err) return res.status(500).json({ error: "Server error" });
+
+                res.json({ message: "User Info updated successfully" });
+              }
+            );
+          }
+        });
       }
-    });
-  }
 
-  //Update name only
-  if (name || !oldPassword || !newPassword || !retypeNewPassword) {
-    // Validate input
-    if (!email || !role) {
-      return res
-        .status(400)
-        .json({ error: "Please provide all required fields" });
+      //Update name only
+      if (name || !oldPassword || !newPassword || !retypeNewPassword) {
+        // Validate input
+        if (!email || !role) {
+          return res
+            .status(400)
+            .json({ error: "Please provide all required fields" });
+        }
+
+        const updateSql = `UPDATE ${tableName} SET ${nameRole} = ? WHERE ${emailRole} = ?`;
+
+        db.query(updateSql, [name, email], (err, updateResult) => {
+          if (err) return res.status(500).json({ error: "Server error" });
+
+          res.json({ message: "Name updated successfully" });
+        });
+      }
     }
-
-    const updateSql = `UPDATE ${tableName} SET ${nameRole} = ? WHERE ${emailRole} = ?`;
-
-    db.query(updateSql, [name, email], (err, updateResult) => {
-      if (err) return res.status(500).json({ error: "Database error" });
-
-      res.json({ message: "Name updated successfully" });
-    });
-  }
+  });
 });
 
 module.exports = router;

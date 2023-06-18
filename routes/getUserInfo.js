@@ -37,7 +37,7 @@ router.post("/", (req, res) => {
       const user = result[0];
       res.json({ user }); // send user info along with the token
     } else {
-      res.status(401).json({ error: "Incorrect user role or invalid email" });
+      res.status(404).json({ error: `User not found in the role - ${role}` });
     }
   });
 });

@@ -20,9 +20,9 @@ router.post('/', upload.single('catImage'), async (req, res) => {
     db.query(sql, [name, gender, age, color, breed, description, catImgPath, createDateTime, updateDateTime, cwEmail], (err, result) =>  {
         if (err) {
             console.error('Error: \n', err);
-            res.status(500).send('Server error');
+            res.status(500).json({error: 'Server error'});
         } else {
-            res.json({message: 'Details of the cat created successfully!'})
+            res.status(200).json({message: 'Details of the cat created successfully!'})
         }
     });
 });

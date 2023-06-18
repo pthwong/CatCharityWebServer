@@ -7,11 +7,15 @@ var db = require("../dbConnect");
 function getCatsInfo(callback) {
   db.query(
     "SELECT catID, name, gender, age, color, breed, updateDateTime, cwEmail, catImgPath FROM Cats",
-    function (error, results, fields) {
+    function (error, results) {
       if (error) {
-        callback({ status: 500, error: error, response: null });
+        callback({ status: 500, error: error });
       } else {
-        callback({ status: 200, error: null, response: results });
+        if (results.length === 0) {
+          callback({ status: 404, error: "Cat not found" });
+        } else {
+          callback({ status: 200, response: results });
+        }
       }
     }
   );

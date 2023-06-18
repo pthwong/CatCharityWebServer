@@ -10,14 +10,18 @@ router.post("/", (req, res) => {
   const sql = `SELECT * FROM CatFavourite INNER JOIN Cats ON CatFavourite.catID = Cats.catID WHERE CatFavourite.pubEmail = ?`;
   //SELECT * FROM CatFavourite INNER JOIN Cats ON CatFavourite.catID = Cats.catID WHERE CatFavourite.pubEmail = 'peterleung123@gmail.com'
   db.query(sql, [pubEmail], (err, result) => {
-    if (err) throw err;
+    
+    if (err) {
+      // Return a 500 status code and error message
+      return res.status(500).json({ error: err });
+    }
 
     if (result.length > 0) {
       const response = result;
-      res.json({ response }); // send user info along with the token
+      res.status(200).json({ response }); // send user info along with the token
     } else {
       res
-        .status(400)
+        .status(404)
         .json({ error: "The user did not have cat favourite list" });
     }
   });

@@ -46,8 +46,13 @@ router.post("/", async (req, res) => {
         [cwName, cwEmail, hashedCwPassword, hashedSignupCode],
         (err, result) => {
           if (err) {
-            // Handle error
-            res.status(500).json({ error: err.message });
+            // Check if it is a duplicate entry error
+            if (err.code === "ER_DUP_ENTRY") {
+              res.status(409).json({ error: "There is a user already" });
+            } else {
+              // Handle other errors
+              res.status(500).json({ error: err.message });
+            }
           } else {
             // Registration was successful
             res.json({
