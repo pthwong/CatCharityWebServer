@@ -9,7 +9,6 @@ describe("Testing API for getting Cat Details", () => {
 
     // Assertions for all cat info...
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("response");
     expect(Array.isArray(res.body.response)).toBe(true);
     expect(res.body.response.length).toBeGreaterThan(0);
   });
@@ -21,11 +20,8 @@ describe("Testing API for getting Cat Details", () => {
 
     // Assertions for single cat info
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("status", 200);
-    expect(res.body).toHaveProperty("response");
-    expect(Array.isArray(res.body.response)).toBe(true);
-    expect(res.body.response.length).toEqual(1);
-    expect(res.body.response[0]).toHaveProperty("catID", catID);
+    expect(res.body.length).toEqual(1);
+    expect(res.body[0]).toHaveProperty("catID", catID);
   });
 });
 
@@ -126,5 +122,30 @@ describe("Testing API for removing Cat Details", () => {
         expect(res.body.error).toEqual("Cat not found");
         done();
       });
+  });
+});
+
+describe("Testing API for searching Cats", () => {
+  it("Search the cat by name (in DB)", async () => {
+    const res = await request(app).get("/cats?name=ammie");
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("response");
+    expect(Array.isArray(res.body.response)).toBe(true);
+    expect(res.body.response.length).toBeGreaterThan(0);
+  });
+  it("Search the cat by color(in DB)", async () => {
+    const res = await request(app).get("/cats?color=black");
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("response");
+    expect(Array.isArray(res.body.response)).toBe(true);
+    expect(res.body.response.length).toBeGreaterThan(0);
+  });
+  it("Search the cat by name & color(not in DB)", async () => {
+    const res = await request(app).get("/cats?name=susan&color=brown");
+
+    expect(res.statusCode).toEqual(404);
+    expect(res.body.error).toEqual("Cat not found");
   });
 });

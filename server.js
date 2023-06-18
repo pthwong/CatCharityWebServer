@@ -3,6 +3,7 @@ const cors = require("cors");
 
 let catInfo = require("./routes/catInfo"); // API for displaying all cats in simplied info.
 let catDetailsById = require("./routes/catDetailsById"); //API for Display details of the cat
+let searchCat = require("./routes/searchCat");
 let createCatDetails = require("./routes/createCatDetails"); // API for Charity Worker create cat details
 let updateCatDetails = require("./routes/updateCatDetails"); // API for Charity Worker update cat details
 let delCatDetails = require("./routes/delCatDetails"); // API for Charity Worker remove cat details
@@ -41,6 +42,7 @@ app.get("/", (req, res) => {
 // Calling RESTful API
 app.use("/cat", catInfo);
 app.use("/cat", catDetailsById);
+app.use("/cats", searchCat);
 app.use("/cat", createCatDetails);
 app.use("/cat", updateCatDetails);
 app.use("/cat", delCatDetails);
