@@ -1,0 +1,8 @@
+openapi: 3.0.0
+info:
+  title: API for Cat Charity Web Server
+  description: These are the APIs for the server, creating, reading, updating & deleting the details of 
+  version: 1.0.0
+paths: {}
+components:
+  schemas: {}
