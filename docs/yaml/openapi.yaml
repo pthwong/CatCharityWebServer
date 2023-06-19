@@ -1,8 +1,994 @@
 openapi: 3.0.0
+servers:
+  - description: API Backend Server
+    url: https://api.whomethser.synology.me:7960
 info:
+  description: These are the APIs for the server processing CRUD operations with users, cats & favourite cat lists.
+  version: "1.0.0"
   title: API for Cat Charity Web Server
-  description: These are the APIs for the server, creating, reading, updating & deleting the details of 
-  version: 1.0.0
-paths: {}
-components:
-  schemas: {}
+tags:
+  - name: Charity Workers
+    description: Able to add, update, read & remove the cat details.
+  - name: Public
+    description: Able to browse the information of the cat with searching & filtering.
+  - name: Public (with Account)
+    description: Able to save the cat to his/her favourite cat list.
+
+paths:
+  /cat:
+    get:
+      summary: Displaying All Cats
+      operationId: getAllCats
+      description: Fetching ALL cat details
+      responses:
+        "200":
+          description: Display results successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  response:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        catID:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: Ammie
+                        gender:
+                          type: string
+                          example: Female
+                        age:
+                          type: integer
+                          example: 2
+                        color:
+                          type: string
+                          example: Brown
+                        breed:
+                          type: string
+                          example: American Shorthair Cat
+                        updateDateTime:
+                          type: string
+                          format: date-time
+                          example: "2023-06-19T06:34:44.000Z"
+                        cwEmail:
+                          type: string
+                          format: email
+                          example: maryhung125@yahoo.com
+                        catImgPath:
+                          type: string
+                          example: ""
+        "404":
+          description: Cat not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cat not found"
+                required:
+                  - error
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Server error"
+                required:
+                  - error
+      tags:
+        - Public
+        - Charity Workers
+        - Public (with Account)
+    post:
+      summary: Create cat details
+      operationId: createCatDetails
+      parameters:
+        - name: authorization
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Ammie"
+                gender:
+                  type: string
+                  example: "Female"
+                age:
+                  type: integer
+                  example: 1
+                color:
+                  type: string
+                  example: "Brown"
+                breed:
+                  type: string
+      responses:
+        "200":
+          description: Successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Details of the cat created successfully!"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Unauthorized access"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Server error"
+      tags:
+        - Public
+        - Charity Workers
+        - Public (with Account)
+
+  /cat/{catID}:
+    get:
+      summary: Displaying Cats by catID
+      description: Fetching cat details by catID
+      parameters:
+        - name: catID
+          in: path
+          description: ID of the cat
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Display results successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  response:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        catID:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: Ammie
+                        gender:
+                          type: string
+                          example: Female
+                        age:
+                          type: integer
+                          example: 2
+                        color:
+                          type: string
+                          example: Brown
+                        breed:
+                          type: string
+                          example: American Shorthair Cat
+                        updateDateTime:
+                          type: string
+                          format: date-time
+                          example: "2023-06-19T06:34:44.000Z"
+                        cwEmail:
+                          type: string
+                          format: email
+                          example: maryhung125@yahoo.com
+                        catImgPath:
+                          type: string
+                          example: ""
+        "404":
+          description: Cat not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cat not found"
+                required:
+                  - error
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Server error"
+                required:
+                  - error
+      tags:
+        - Public
+        - Public (with Account)
+        - Charity Workers
+    put:
+      summary: Updating Cat details by catID
+      description: Updating Cat details by catID
+      parameters:
+        - name: catID
+          in: path
+          description: ID of the cat
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: authorization
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Ammie"
+                gender:
+                  type: string
+                  example: "Female"
+                age:
+                  type: integer
+                  example: 1
+                color:
+                  type: string
+                  example: "Brown"
+                breed:
+                  type: string
+      responses:
+        "200":
+          description: Successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Details of the cat updated successfully!"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Unauthorized access"
+        "404":
+          description: Cat Not Found
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Cat Not Found"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Server error"
+      tags:
+        - Charity Workers
+    delete:
+      summary: Removing Cat details by catID
+      description: Removing Cat details by catID
+      parameters:
+        - name: catID
+          in: path
+          description: ID of the cat
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: authorization
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Details of the cat updated successfully!"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Unauthorized access"
+        "404":
+          description: Cat Not Found
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Cat Not Found"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Server error"
+      tags:
+        - Charity Workers
+  /cats:
+    get:
+      summary: Searching cats
+      operationId: searchCats
+      description: Fetching ALL cat details
+      parameters:
+        - name: minAge
+          in: query
+          description: Minimum age of the cat
+          schema:
+            type: integer
+        - name: maxAge
+          in: query
+          description: Maximum age of the cat
+          schema:
+            type: integer
+        - name: color
+          in: query
+          description: Color of the cat
+          schema:
+            type: string
+        - name: breed
+          in: query
+          description: Breed of the cat
+          schema:
+            type: string
+        - name: name
+          in: query
+          description: Name of the cat
+          schema:
+            type: string
+        - name: gender
+          in: query
+          description: Gender of the cat
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Display results successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  response:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        catID:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: Ammie
+                        gender:
+                          type: string
+                          example: Female
+                        age:
+                          type: integer
+                          example: 2
+                        color:
+                          type: string
+                          example: Brown
+                        breed:
+                          type: string
+                          example: American Shorthair Cat
+                        updateDateTime:
+                          type: string
+                          format: date-time
+                          example: "2023-06-19T06:34:44.000Z"
+                        cwEmail:
+                          type: string
+                          format: email
+                          example: maryhung125@yahoo.com
+                        catImgPath:
+                          type: string
+                          example: ""
+        "404":
+          description: Cat not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cat not found"
+                required:
+                  - error
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Server error"
+                required:
+                  - error
+      tags:
+        - Public
+        - Public (with Account)
+        - Charity Workers
+  /cwLogin:
+    post:
+      summary: Login Charity Worker Account
+      operationId: cwLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cwEmail:
+                  type: string
+                  example: "mary@gmail.com"
+                cwPassword:
+                  type: string
+                  example: "2382938@2821"
+      responses:
+        "200":
+          description: Successfully login the account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "400":
+          description: Missing email or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing email or password"
+        "401":
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid email or password"
+      tags:
+        - Charity Workers
+  /cwRegister:
+    post:
+      summary: Sign up Charity Worker Account
+      operationId: cwRegister
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cwName:
+                  type: string
+                  example: "Mary"
+                cwEmail:
+                  type: string
+                  example: "mary@gmail.com"
+                cwPassword:
+                  type: string
+                  example: "2382938@2821"
+                signUpCode:
+                  type: integer
+                  example: "123456"
+      responses:
+        "200":
+          description: Successfully sign up the account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successful signing up charity worker account
+        "400":
+          description: Invalid Sign up code got from Sign up code table
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid Sign up code"
+        "409":
+          description: Duplicate User
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "There is a user already"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      tags:
+        - Charity Workers
+  /pubLogin:
+    post:
+      summary: Login Account (Public)
+      operationId: pubLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pubEmail:
+                  type: string
+                  example: "peterleung123@gmail.com"
+                pubPassword:
+                  type: string
+                  example: "32432#@13232"
+      responses:
+        "200":
+          description: Successfully login the account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "400":
+          description: Missing email or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing email or password"
+        "401":
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid email or password"
+      tags:
+        - Public (with Account)
+  /pubRegister:
+    post:
+      summary: Sign up Charity Worker Account
+      operationId: pubRegister
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pubName:
+                  type: string
+                  example: "Mary"
+                pubEmail:
+                  type: string
+                  example: "mary@gmail.com"
+                pubPassword:
+                  type: string
+                  example: "2382938@2821"
+      responses:
+        "200":
+          description: Successfully sign up the account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successful signing up charity worker account
+        "409":
+          description: Duplicate User
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "There is a user already"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      tags:
+        - Public
+  /user:
+    put:
+      summary: Updating user info
+      operationId: updateUserInfo
+      parameters:
+        - name: authorization
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Mary"
+                email:
+                  type: string
+                  example: "mary@yahoo.com"
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+                retypeNewPassword:
+                  type: string
+                role:
+                  type: string
+                  example: "cw"
+      responses:
+        "200":
+          description: Successfully updating user info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User Info updated successfully
+        "400":
+          description: Invalid role
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Invalid role
+        "401":
+          description: Unauthorized access or incorrect old password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                unauthorizedAccess:
+                  summary: Unauthorized access
+                  value:
+                    error: Unauthorized access
+                incorrectOldPassword:
+                  summary: Incorrect old password
+                  value:
+                    error: Old password is incorrect
+                misMatchNewPassword:
+                  summary: New password mismatch
+                  value:
+                    error: New password and retype password do not match
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: User not found in the role - cw
+      tags:
+        - Charity Workers
+        - Public (with Account)
+    post:
+      tags:
+        - Charity Workers
+        - Public (with Account)
+  /favourite:
+    post:
+      summary: Displaying favourite cat of public users
+      operationId: getFavouriteList
+      description: Fetching Favourite List
+      parameters:
+        - name: authorization
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pubEmail:
+                  type: string
+                  example: "mary@gmail.com"
+      responses:
+        "200":
+          description: Display results successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        favID:
+                          type: integer
+                          example: 1
+                        pubEmail:
+                          type: string
+                          example: peterleung123@gmail.com
+                        catID:
+                          type: integer
+                          example: 2
+                        name:
+                          type: string
+                          example: Sumsum
+                        gender:
+                          type: string
+                          example: Male
+                        age:
+                          type: integer
+                          example: 5
+                        color:
+                          type: string
+                          example: Grey
+                        breed:
+                          type: string
+                          example: American Shorthair Cat
+                        description:
+                          type: string
+                          description: Sumsum is the American Shorthair Cat, he is so cute cute!
+                        catImgPath:
+                          type: string
+                          example: catTest.png
+                        createDateTime:
+                          type: string
+                          example: 2023-05-28T09:21:31.000Z
+                        updateDateTime:
+                          type: string
+                          example: 2023-05-28T09:21:31.000Z
+                        cwEmail:
+                          type: string
+                          example: maryhung125@yahoo.com
+        "404":
+          description: Cat not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cat not found"
+                required:
+                  - error
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Server error"
+                required:
+                  - error
+      tags:
+        - Public (with Account)
+    delete:
+      summary: Remove the favourite cat
+      operationId: delFavourite
+      parameters:
+        - name: authorization
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully removed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Cat removed from favourites successfully"
+        "401":
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Unauthorized access"
+        "404":
+          description: Cat Noy Found
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Cat not found in favourites"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      tags:
+        - Public (with Account)
+  /addFavourite:
+    post:
+      summary: Adding cat to favourite list
+      operationId: addFavourite
+      description: Adding cat to favourite list
+      parameters:
+        - name: authorization
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pubEmail:
+                  type: string
+                  example: "mary@gmail.com"
+                catID:
+                  type: integer
+                  example: "1"
+      responses:
+        "200":
+          description: Successfully added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Cat added to favourites successfully
+        "404":
+          description: Cat not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cat not found"
+                required:
+                  - error
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                  - error
+      tags:
+        - Public (with Account)
