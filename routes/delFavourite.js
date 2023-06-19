@@ -4,7 +4,10 @@ const router = express.Router();
 // Import the database connection object
 const db = require("../dbConnect");
 
-router.delete("/", (req, res) => {
+// Import the authenticateToken middleware
+const { authenticateToken } = require("../middlewares/auth");
+
+router.delete("/", authenticateToken, (req, res) => {
   const { pubEmail, catID } = req.body;
 
   // First, check if the entry exists

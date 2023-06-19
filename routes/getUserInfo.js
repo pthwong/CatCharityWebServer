@@ -4,7 +4,10 @@ const router = express.Router();
 // Import the database connection object
 const db = require("../dbConnect");
 
-router.post("/", (req, res) => {
+// Import the authenticateToken middleware
+const { authenticateToken } = require("../middlewares/auth");
+
+router.post("/", authenticateToken, (req, res) => {
   const { email, role } = req.body;
 
   if (!email || !role) {

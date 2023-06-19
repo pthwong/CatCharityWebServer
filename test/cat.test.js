@@ -26,9 +26,23 @@ describe("Testing API for getting Cat Details", () => {
 });
 
 describe("Testing API for creating Cat Details", () => {
-  it("Create cat details successfully", (done) => {
+  // Login before running any tests
+  let token;
+
+  beforeAll(async () => {
+    const response = await request(app).post("/cwLogin").send({
+      cwEmail: "maryhung125@yahoo.com", // Replace with valid email
+      cwPassword: "1234*#5678", // Replace with valid password
+    });
+    console.log(response.body);
+    token = response.body.token;
+    console.log("Token:", token);
+  });
+
+  it("Create cat details with valid token", (done) => {
     request(app)
-      .post("/cat") // Update this with the actual endpoint
+      .post("/cat")
+      .set("authorization", `Bearer ${token}`)
       .field("name", "Whiskers")
       .field("gender", "Male")
       .field("age", 2)
@@ -36,27 +50,55 @@ describe("Testing API for creating Cat Details", () => {
       .field("breed", "Persian")
       .field("description", "A lovely black cat")
       .field("cwEmail", "maryhung125@yahoo.com")
-      .attach("catImage", path.join(__dirname, "catImage/catTest.png")) // Update the file path
+      .attach("catImage", path.join(__dirname, "catImage/catTest.png"))
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
-        console.log(res.body);
-        expect(res.body.message).toEqual(
+        expect(res.body.message).toBe(
           "Details of the cat created successfully!"
         );
-        console.log(res.body);
         done();
       });
   });
-  // Here you could add more tests to check for different scenarios
-  // (e.g., what if some of the fields are missing, what if the image upload fails, etc.)
+  it("Create cat details with invalid token", (done) => {
+    const invalidToken = "12234566";
+    request(app)
+      .post("/cat")
+      .set("authorization", `Bearer ${invalidToken}`)
+      .field("name", "Whiskers")
+      .field("gender", "Male")
+      .field("age", 2)
+      .field("color", "Black")
+      .field("breed", "Persian")
+      .field("description", "A lovely black cat")
+      .field("cwEmail", "maryhung125@yahoo.com")
+      .attach("catImage", path.join(__dirname, "catImage/catTest.png"))
+      .expect(401)
+      .end((err, res) => {
+        if (err) return done(err);
+        done();
+      });
+  });
 });
 
 describe("Testing API for updating Cat Details", () => {
-  it("Update cat details successfully", (done) => {
+  let token;
+
+  beforeAll(async () => {
+    const response = await request(app).post("/cwLogin").send({
+      cwEmail: "maryhung125@yahoo.com", // Replace with valid email
+      cwPassword: "1234*#5678", // Replace with valid password
+    });
+    console.log(response.body);
+    token = response.body.token;
+    console.log("Token:", token);
+  });
+
+  it("Update cat details with valid token", (done) => {
     const catID = "5"; // replace with the catID to update
     request(app)
       .put(`/cat/${catID}`) // Use PUT method and include the catID in the route
+      .set("authorization", `Bearer ${token}`)
       .field("name", "Whisker")
       .field("gender", "Female")
       .field("age", 2)
@@ -75,11 +117,32 @@ describe("Testing API for updating Cat Details", () => {
         done();
       });
   });
+  it("Update cat details with invalid token", (done) => {
+    const catID = "5"; // replace with the catID to update
+    const invalidToken = "12234566";
+    request(app)
+      .put(`/cat/${catID}`) // Use PUT method and include the catID in the route
+      .set("authorization", `Bearer ${invalidToken}`)
+      .field("name", "Whisker")
+      .field("gender", "Female")
+      .field("age", 2)
+      .field("color", "White")
+      .field("breed", "Persian")
+      .field("description", "A lovely white cat")
+      .field("cwEmail", "maryhung125@yahoo.com")
+      .attach("catImage", path.join(__dirname, "catImage/catTest.png"))
+      .expect(401)
+      .end((err, res) => {
+        if (err) return done(err);
+        done();
+      });
+  });
 
   it("Update cat details with error (Cat not found)", (done) => {
     const catID = "30"; // replace with a non-existing catID
     request(app)
       .put(`/cat/${catID}`)
+      .set("authorization", `Bearer ${token}`)
       .field("name", "Whisker")
       .field("gender", "Female")
       .field("age", 2)
@@ -98,10 +161,23 @@ describe("Testing API for updating Cat Details", () => {
 });
 
 describe("Testing API for removing Cat Details", () => {
+  let token;
+
+  beforeAll(async () => {
+    const response = await request(app).post("/cwLogin").send({
+      cwEmail: "maryhung125@yahoo.com", // Replace with valid email
+      cwPassword: "1234*#5678", // Replace with valid password
+    });
+    console.log(response.body);
+    token = response.body.token;
+    console.log("Token:", token);
+  });
+
   it("Remove cat details successfully", (done) => {
     const catID = "17"; // replace with the catID to remove
     request(app)
       .delete(`/cat/${catID}`)
+      .set("authorization", `Bearer ${token}`)
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
@@ -115,6 +191,7 @@ describe("Testing API for removing Cat Details", () => {
     const catID = "11"; // replace with a non-existing catID
     request(app)
       .delete(`/cat/${catID}`)
+      .set("authorization", `Bearer ${token}`)
       .expect(404)
       .end((err, res) => {
         if (err) return done(err);

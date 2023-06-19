@@ -3,6 +3,7 @@ var router = express.Router();
 
 // Import the db object
 var db = require("../dbConnect");
+const { authenticateToken } = require("../middlewares/auth");
 
 function deleteCatDetails(catID, callback) {
   // First check if the cat with the given catID exists
@@ -39,7 +40,7 @@ function deleteCatDetails(catID, callback) {
   );
 }
 
-router.delete("/:catID", function (req, res, next) {
+router.delete("/:catID", authenticateToken, function (req, res, next) {
   const catID = req.params.catID;
   deleteCatDetails(catID, function (response) {
     res.status(response.status).send(response);

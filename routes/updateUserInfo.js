@@ -3,7 +3,10 @@ var router = express.Router();
 var crypto = require("crypto");
 var db = require("../dbConnect");
 
-router.put("/", (req, res) => {
+// Import the authenticateToken middleware
+const { authenticateToken } = require("../middlewares/auth");
+
+router.put("/", authenticateToken, (req, res) => {
   const { name, email, oldPassword, newPassword, retypeNewPassword, role } =
     req.body;
 

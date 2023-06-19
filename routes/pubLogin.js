@@ -7,11 +7,13 @@ const db = require("../dbConnect");
 
 const crypto = require("crypto");
 
-function generateSecretKey(length = 32) {
-  return crypto.randomBytes(length).toString("hex");
-}
+// function generateSecretKey(length = 32) {
+//   return crypto.randomBytes(length).toString("hex");
+// }
 
-const SECRET_KEY = generateSecretKey();
+// const SECRET_KEY = generateSecretKey();
+const SECRET_KEY = process.env.JWT_SECRET;
+
 console.log("SECRET_KEY:\n", SECRET_KEY);
 
 router.post("/", (req, res) => {
@@ -33,7 +35,8 @@ router.post("/", (req, res) => {
     if (result.length > 0) {
       const publicUser = result[0];
       const token = jwt.sign({ pubEmail: publicUser.pubEmail }, SECRET_KEY); // replace with your secret key
-      res.json({ token });
+      console.log("Generated token:", token);
+      res.json({ token: token });
     } else {
       res.status(401).json({ error: "Invalid email or password" });
     }

@@ -2,6 +2,18 @@ const request = require("supertest");
 const app = require("../server");
 
 describe("Testing the favourite cats API", () => {
+  let token;
+
+  beforeAll(async () => {
+    const response = await request(app).post("/pubLogin").send({
+      pubEmail: "peterleung123@gmail.com", // Replace with valid email
+      pubPassword: "32432#@13232", // Replace with valid password
+    });
+    console.log(response.body);
+    token = response.body.token;
+    console.log("Token:", token);
+  });
+
   // Test adding a cat to the favourites list
   it("Add a cat to favourites successfully", (done) => {
     const data = {
@@ -11,6 +23,7 @@ describe("Testing the favourite cats API", () => {
 
     request(app)
       .post("/addFavourite")
+      .set("authorization", `Bearer ${token}`)
       .send(data)
       .expect(200)
       .end((err, res) => {
@@ -31,6 +44,7 @@ describe("Testing the favourite cats API", () => {
 
     request(app)
       .delete("/favourite")
+      .set("authorization", `Bearer ${token}`)
       .send(data)
       .expect(200)
       .end((err, res) => {
@@ -51,6 +65,7 @@ describe("Testing the favourite cats API", () => {
 
     request(app)
       .delete("/favourite")
+      .set("authorization", `Bearer ${token}`)
       .send(data)
       .expect(404)
       .end((err, res) => {

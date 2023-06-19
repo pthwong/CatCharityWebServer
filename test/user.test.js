@@ -2,13 +2,29 @@ const request = require("supertest");
 const app = require("../server");
 
 describe("Testing API for getting user info", () => {
+  let token;
+
+  beforeAll(async () => {
+    const response = await request(app).post("/cwLogin").send({
+      cwEmail: "maryhung125@yahoo.com", // Replace with valid email
+      cwPassword: "1234*#5678", // Replace with valid password
+    });
+    console.log(response.body);
+    token = response.body.token;
+    console.log("Token:", token);
+  });
+
   // Testing the endpoint to fetch user info by email
   it("Fetch Charity Worker user info by email", async () => {
+    // Login before running any tests
     const email = "maryhung125@yahoo.com"; // Use a valid email that exists in your database
     const role = "cw";
 
     // Sending a POST request with email in the request body
-    const res = await request(app).post("/user").send({ email, role });
+    const res = await request(app)
+      .post("/user")
+      .set("authorization", `Bearer ${token}`)
+      .send({ email, role });
 
     console.log(res.body);
 
@@ -24,7 +40,10 @@ describe("Testing API for getting user info", () => {
     const role = "pub";
 
     // Sending a POST request with email in the request body
-    const res = await request(app).post("/user").send({ email, role });
+    const res = await request(app)
+      .post("/user")
+      .set("authorization", `Bearer ${token}`)
+      .send({ email, role });
 
     console.log(res.body);
 
@@ -39,7 +58,10 @@ describe("Testing API for getting user info", () => {
     const role = "cw";
 
     // Sending a POST request with email in the request body
-    const res = await request(app).post("/user").send({ email, role });
+    const res = await request(app)
+      .post("/user")
+      .set("authorization", `Bearer ${token}`)
+      .send({ email, role });
 
     console.log(res.body);
 
@@ -50,6 +72,18 @@ describe("Testing API for getting user info", () => {
 });
 
 describe("Testing API for updating user info", () => {
+  let token;
+
+  beforeAll(async () => {
+    const response = await request(app).post("/cwLogin").send({
+      cwEmail: "khc123@gmail.com", // Replace with valid email
+      cwPassword: "12345678#", // Replace with valid password
+    });
+    console.log(response.body);
+    token = response.body.token;
+    console.log("Token:", token);
+  });
+
   it("Update info with user not found Error", async () => {
     const endpoint = "/user";
     const requestBody = {
@@ -60,6 +94,7 @@ describe("Testing API for updating user info", () => {
 
     const res = await request(app)
       .put(endpoint)
+      .set("authorization", `Bearer ${token}`)
       .send(requestBody)
       .set("Accept", "application/json");
 
@@ -79,6 +114,7 @@ describe("Testing API for updating user info", () => {
 
     const res = await request(app)
       .put(endpoint)
+      .set("authorization", `Bearer ${token}`)
       .send(requestBody)
       .set("Accept", "application/json");
 
@@ -101,6 +137,7 @@ describe("Testing API for updating user info", () => {
 
     const res = await request(app)
       .put(endpoint)
+      .set("authorization", `Bearer ${token}`)
       .send(requestBody)
       .set("Accept", "application/json"); // set any necessary headers
 
@@ -115,7 +152,6 @@ describe("Testing API for updating user info", () => {
   });
 
   it("Fail to update password if the old password is incorrect", async () => {
-    const endpoint = "/user";
     const requestBody = {
       email: "khc123@gmail.com",
       role: "cw",
@@ -124,8 +160,11 @@ describe("Testing API for updating user info", () => {
       retypeNewPassword: "23456*890",
     };
 
+    const endpoint = "/user";
+
     const res = await request(app)
       .put(endpoint)
+      .set("authorization", `Bearer ${token}`)
       .send(requestBody)
       .set("Accept", "application/json");
 
@@ -141,20 +180,21 @@ describe("Testing API for updating user info", () => {
     const requestBody = {
       email: "khc123@gmail.com",
       role: "cw",
-      oldPassword: "23456*890",
+      oldPassword: "12345678#",
       newPassword: "23456*8901",
       retypeNewPassword: "23456*8902",
     };
 
     const res = await request(app)
       .put(endpoint)
+      .set("authorization", `Bearer ${token}`)
       .send(requestBody)
       .set("Accept", "application/json");
 
     console.log(res.body);
 
     // Assertions
-    expect(res.statusCode).toEqual(400);
+    expect(res.statusCode).toEqual(401);
     expect(res.body).toHaveProperty("error");
   });
 });

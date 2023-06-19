@@ -4,7 +4,10 @@ const router = express.Router();
 // Import the database connection object
 const db = require("../dbConnect");
 
-router.post("/", (req, res) => {
+// Import the authenticateToken middleware
+const { authenticateToken } = require("../middlewares/auth");
+
+router.post("/", authenticateToken, (req, res) => {
   const { pubEmail } = req.body;
 
   const sql = `SELECT * FROM CatFavourite INNER JOIN Cats ON CatFavourite.catID = Cats.catID WHERE CatFavourite.pubEmail = ?`;
