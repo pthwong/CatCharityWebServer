@@ -30,7 +30,7 @@ router.post("/", (req, res) => {
 
     if (result.length > 0) {
       const charityWorker = result[0];
-      const token = jwt.sign({ cwEmail: charityWorker.cwEmail }, SECRET_KEY); // replace with your secret key
+      const token = jwt.sign({ cwEmail: charityWorker.cwEmail }, SECRET_KEY);
       console.log("Generated token:", token);
       res.json({ token: token });
     } else {

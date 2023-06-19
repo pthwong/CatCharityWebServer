@@ -7,11 +7,6 @@ const db = require("../dbConnect");
 
 const crypto = require("crypto");
 
-// function generateSecretKey(length = 32) {
-//   return crypto.randomBytes(length).toString("hex");
-// }
-
-// const SECRET_KEY = generateSecretKey();
 const SECRET_KEY = process.env.JWT_SECRET;
 
 console.log("SECRET_KEY:\n", SECRET_KEY);
