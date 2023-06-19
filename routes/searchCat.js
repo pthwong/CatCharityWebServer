@@ -25,7 +25,7 @@ function searchCats(params, callback) {
     query += ` AND name LIKE ${db.escape(`%${params.name}%`)}`;
   }
   if (params.gender) {
-    query += ` AND gender LIKE ${db.escape(`%${params.gender}%`)}`;
+    query += ` AND gender=${db.escape(`${params.gender}`)}`;
   }
 
   console.log("Generated query:", query);

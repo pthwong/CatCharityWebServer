@@ -35,6 +35,26 @@ describe("Testing the favourite cats API", () => {
       });
   });
 
+  // Test displaying favourites list
+  it("Display favourites list successfully", (done) => {
+    const data = {
+      pubEmail: "peterleung123@gmail.com",
+      catID: "1",
+    };
+
+    request(app)
+      .post("/favourite")
+      .set("authorization", `Bearer ${token}`)
+      .send(data)
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        console.log(res.body);
+        expect(res.body.response.length).toBeGreaterThan(0);
+        done();
+      });
+  });
+
   // Test removing a cat from the favourites list
   it("Remove a cat from favourites successfully", (done) => {
     const data = {

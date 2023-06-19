@@ -28,7 +28,6 @@ describe("Testing API for getting user info", () => {
 
     console.log(res.body);
 
-    // Assertions for user info
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("user");
     expect(res.body).toHaveProperty("user.cwEmail");
@@ -47,7 +46,6 @@ describe("Testing API for getting user info", () => {
 
     console.log(res.body);
 
-    // Assertions for user info
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("user");
     expect(res.body).toHaveProperty("user.pubEmail");
@@ -65,7 +63,6 @@ describe("Testing API for getting user info", () => {
 
     console.log(res.body);
 
-    // Assertions for user info
     expect(res.statusCode).toEqual(404);
     expect(res.body).toHaveProperty("error");
   });
@@ -100,7 +97,6 @@ describe("Testing API for updating user info", () => {
 
     console.log(res.body);
 
-    // Assertions
     expect(res.statusCode).toEqual(404);
     expect(res.body).toHaveProperty("error", "User not found");
   });
@@ -120,7 +116,6 @@ describe("Testing API for updating user info", () => {
 
     console.log(res.body);
 
-    // Assertions
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("message", "Name updated successfully");
   });
@@ -143,7 +138,6 @@ describe("Testing API for updating user info", () => {
 
     console.log(res.body);
 
-    // Assertions
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty(
       "message",
@@ -170,7 +164,6 @@ describe("Testing API for updating user info", () => {
 
     console.log(res.body);
 
-    // Assertions
     expect(res.statusCode).toEqual(401);
     expect(res.body).toHaveProperty("error", "Old password is incorrect");
   });
@@ -193,7 +186,6 @@ describe("Testing API for updating user info", () => {
 
     console.log(res.body);
 
-    // Assertions
     expect(res.statusCode).toEqual(401);
     expect(res.body).toHaveProperty("error");
   });

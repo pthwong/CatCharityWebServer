@@ -90,7 +90,9 @@ router.put("/", authenticateToken, (req, res) => {
               (err, updateResult) => {
                 if (err) return res.status(500).json({ error: "Server error" });
 
-                res.json({ message: "User Info updated successfully" });
+                res
+                  .status(200)
+                  .json({ message: "User Info updated successfully" });
               }
             );
           } else {

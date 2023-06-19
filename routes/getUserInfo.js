@@ -4,10 +4,7 @@ const router = express.Router();
 // Import the database connection object
 const db = require("../dbConnect");
 
-// Import the authenticateToken middleware
-const { authenticateToken } = require("../middlewares/auth");
-
-router.post("/", authenticateToken, (req, res) => {
+router.post("/", (req, res) => {
   const { email, role } = req.body;
 
   if (!email || !role) {
@@ -38,7 +35,7 @@ router.post("/", authenticateToken, (req, res) => {
 
     if (result.length > 0) {
       const user = result[0];
-      res.json({ user }); // send user info along with the token
+      res.status(200).json({ user }); // send user info along with the token
     } else {
       res.status(404).json({ error: `User not found in the role - ${role}` });
     }

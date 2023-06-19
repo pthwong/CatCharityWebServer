@@ -55,7 +55,7 @@ router.post("/", async (req, res) => {
             }
           } else {
             // Registration was successful
-            res.json({
+            res.status(200).json({
               message: "Successful signing up charity worker account",
             });
           }

@@ -36,7 +36,7 @@ router.post("/", (req, res) => {
       const publicUser = result[0];
       const token = jwt.sign({ pubEmail: publicUser.pubEmail }, SECRET_KEY); // replace with your secret key
       console.log("Generated token:", token);
-      res.json({ token: token });
+      res.status(200).json({ token: token });
     } else {
       res.status(401).json({ error: "Invalid email or password" });
     }

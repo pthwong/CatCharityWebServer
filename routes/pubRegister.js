@@ -33,7 +33,9 @@ router.post("/", async (req, res) => {
           }
         } else {
           // Registration was successful
-          res.json({ message: "Signing up Public account successful" });
+          res
+            .status(200)
+            .json({ message: "Signing up Public account successful" });
         }
       }
     );

@@ -139,7 +139,7 @@ describe("Testing API for updating Cat Details", () => {
   });
 
   it("Update cat details with error (Cat not found)", (done) => {
-    const catID = "30"; // replace with a non-existing catID
+    const catID = "100"; // replace with a non-existing catID
     request(app)
       .put(`/cat/${catID}`)
       .set("authorization", `Bearer ${token}`)
@@ -174,7 +174,7 @@ describe("Testing API for removing Cat Details", () => {
   });
 
   it("Remove cat details successfully", (done) => {
-    const catID = "17"; // replace with the catID to remove
+    const catID = "34"; // replace with the catID to remove
     request(app)
       .delete(`/cat/${catID}`)
       .set("authorization", `Bearer ${token}`)

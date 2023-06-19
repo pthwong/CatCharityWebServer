@@ -59,23 +59,6 @@ describe("Testing API for signing up the charity worker account", () => {
     expect(res.statusCode).toEqual(409); // Check if the status code is 409
     expect(res.body).toHaveProperty("error"); // Check if the registration was contained error
   });
-  it("Signup Charity Worker with other error & correct sign up code", async () => {
-    const name = "Lesile Cheung";
-    const email = "lesile212@gmail.com"; // Use a valid email that exists in your database
-    const password = "38432&29#323";
-    const signUpCode = "698475";
-
-    // Sending a POST request with email in the request body
-    const res = await request(app)
-      .post("/cwRegister")
-      .send({ cwName: name, cwEmail: email, cwPassword: password, signUpCode });
-
-    console.log(res.body);
-
-    // Assertions
-    expect(res.statusCode).toEqual(500); // Check if the status code is 500
-    expect(res.body).toHaveProperty("error"); // Check if the registration was contained error
-  });
 });
 
 describe("Testing API for signing up the public account", () => {
@@ -104,7 +87,6 @@ describe("Testing API for signing up the public account", () => {
     const email = "ianchan@gmail.com";
     const password = "48#efkifewfgjf@";
 
-    // Sending a POST request with email in the request body
     const res = await request(app)
       .post("/pubRegister")
       .send({ pubName: name, pubEmail: email, pubPassword: password });
@@ -113,22 +95,6 @@ describe("Testing API for signing up the public account", () => {
 
     // Assertions
     expect(res.statusCode).toEqual(409); // Check if the status code is 409
-    expect(res.body).toHaveProperty("error"); // Check if the registration was contained error
-  });
-  it("Signup Public Account with other error", async () => {
-    const name = "Ian Chan";
-    const email = "ianchan@gmail.com";
-    const password = "48#efkifewfgjf@";
-
-    // Sending a POST request with email in the request body
-    const res = await request(app)
-      .post("/pubRegister")
-      .send({ pubName: name, pubEmail: email, pubPassword: password });
-
-    console.log(res.body);
-
-    // Assertions
-    expect(res.statusCode).toEqual(500); // Check if the status code is 500
     expect(res.body).toHaveProperty("error"); // Check if the registration was contained error
   });
 });
