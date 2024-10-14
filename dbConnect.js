@@ -4,7 +4,7 @@ const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   port: "3306",
-  password: "2000W*82213th",
+  password: "",
   database: "CatCharityDB",
 });
 
